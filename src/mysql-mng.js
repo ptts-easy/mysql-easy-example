@@ -97,6 +97,10 @@ async function runSql_ex(conn, sql, values = undefined) {
   }
 }
 
+async function showDBs(callback, conn) {
+  return await runSql(conn, `SHOW DATABASES`, undefined, callback);
+}
+
 async function creatDB(conn, database) {
   return await runSql(conn, `CREATE DATABASE IF NOT EXISTS ${database}`);
 }
@@ -107,6 +111,10 @@ async function deleteDB(conn, database) {
 
 async function useDB(conn, database) {
   return await runSql(conn, `USE ${database}`);
+}
+
+async function showTBs(callback, conn) {
+  return await runSql(conn, `SHOW TABLES`, undefined, callback);
 }
 
 async function createTB(conn, table, value) {
@@ -174,4 +182,4 @@ async function deleteRecords(conn, table, condition = undefined) {
   return await runSql(conn, sql);
 }
 
-module.exports = {connect, connectDB, closeConnect, runSql, creatDB, deleteDB, useDB, createTB, deleteTB, insertTB, insertsTB, selectRecords, deleteRecords};
+module.exports = {connect, connectDB, closeConnect, runSql, showDBs, creatDB, deleteDB, useDB, showTBs, createTB, deleteTB, insertTB, insertsTB, selectRecords, deleteRecords};

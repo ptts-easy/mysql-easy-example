@@ -8,8 +8,8 @@
  * @since   2022-08-11
  */
 
-//import {connect, connectDB, closeConnect, runSql, creatDB, deleteDB, useDB, creatTB, deleteTB, insertTB, insertsTB, selectRecords, deleteRecords} from "./mysql-mng";
-const {connect, connectDB, closeConnect, runSql, creatDB, deleteDB, useDB, createTB, deleteTB, insertTB, insertsTB, selectRecords, deleteRecords} = require("./mysql-mng");
+//import {connect, connectDB, closeConnect, runSql, showDBs, creatDB, deleteDB, useDB, showTBs, creatTB, deleteTB, insertTB, insertsTB, selectRecords, deleteRecords} from "./mysql-mng";
+const {connect, connectDB, closeConnect, runSql, showDBs, creatDB, deleteDB, useDB, showTBs, createTB, deleteTB, insertTB, insertsTB, selectRecords, deleteRecords} = require("./mysql-mng");
 require("dotenv/config");
 
 async function mysql_all_test() {
@@ -28,6 +28,11 @@ async function mysql_all_test() {
 
   let conn = await connect(process.env.DB_HOST, process.env.DB_PORT, process.env.DB_USER, process.env.DB_PASSWORD);
 
+  await showDBs((result) => {
+    console.log("==============================");
+    console.log(result);
+  }, conn);
+
   console.log("======= 03 : create database =======");
 
 //  await deleteDB(conn, process.env.DB_DATABASE);
@@ -38,6 +43,11 @@ async function mysql_all_test() {
 
 //  await closeConnect(conn);
 //  conn = await connect(process.env.DB_HOST, process.env.DB_PORT, process.env.DB_USER, process.env.DB_PASSWORD, process.env.DB_DATABASE);
+
+  await showTBs((result) => {
+    console.log("==============================");
+    console.log(result);
+  }, conn);
 
   console.log("======= 04 : create table =======");
 
