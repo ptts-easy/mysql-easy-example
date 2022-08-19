@@ -134,7 +134,7 @@ async function insertRecord(conn, table, column, value) {
 }
 
 async function insertRecords(conn, table, column, values) {
-  return await runSqlValues(conn, `INSERT INTO ${table} (${column}) VALUES ?`, values);
+  return await runSql(conn, `INSERT INTO ${table} (${column}) VALUES ?`, values);
 }
 
 async function updateRecords(conn, table, value, where = undefined) {
