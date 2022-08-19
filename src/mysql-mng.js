@@ -14,9 +14,9 @@ async function connect(host, port, user, password) {
   return conn;
 }
 
-async function connectDB(host, user, password, database) {
+async function connectDB(host, port, user, password, database) {
   
-  var conn = await mysql.createConnection({host:host, user:user, password:password, database:database});
+  var conn = await mysql.createConnection({host:host, port:port, user:user, password:password, database:database});
 
   await conn.connect(function(err) {
     if (err) {
