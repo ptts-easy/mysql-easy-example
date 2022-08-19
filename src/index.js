@@ -41,7 +41,7 @@ async function mysql_all_test() {
   await useDB(conn, process.env.DB_DATABASE);
 
 //  await closeConnect(conn);
-//  conn = await connect(process.env.DB_HOST, process.env.DB_PORT, process.env.DB_USER, process.env.DB_PASSWORD, process.env.DB_DATABASE);
+//  conn = await connectDB(process.env.DB_HOST, process.env.DB_PORT, process.env.DB_USER, process.env.DB_PASSWORD, process.env.DB_DATABASE);
 
   await showTBs((result) => {
     console.log("==============================");
