@@ -8,8 +8,7 @@
  * @since   2022-08-11
  */
 
-//import {connect, connectDB, closeConnect, runSql, showDBs, creatDB, deleteDB, useDB, showTBs, creatTB, deleteTB, insertTB, insertsTB, selectRecords, deleteRecords} from "./mysql-mng";
-const {connect, connectDB, closeConnect, runSql, showDBs, creatDB, deleteDB, useDB, showTBs, createTB, deleteTB, insertTB, insertsTB, selectRecords, deleteRecords} = require("./mysql-mng");
+const {connect, connectDB, closeConnect, runSql, showDBs, creatDB, deleteDB, useDB, showTBs, createTB, deleteTB, insertRecord, insertRecords, selectRecords, deleteRecords} = require("./mysql-mng");
 require("dotenv/config");
 
 async function mysql_all_test() {
@@ -57,7 +56,7 @@ async function mysql_all_test() {
 
   await createTB(conn, tb_name, "id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), address VARCHAR(255)");
 
-  await insertTB(conn, tb_name, "name, address", "'Company Inc', 'Highway 37'");
+  await insertRecord(conn, tb_name, "name, address", "'Company Inc', 'Highway 37'");
 
   let values = [
     ['John', 'Highway 71'],
@@ -76,7 +75,7 @@ async function mysql_all_test() {
     ['Viola', 'Sideway 1633']
   ];
 
-  await insertsTB(conn, tb_name, "name, address", values);
+  await insertRecords(conn, tb_name, "name, address", values);
 
   await selectRecords((result) => {
     console.log("==============================");

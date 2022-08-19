@@ -129,11 +129,11 @@ async function truncateTB(conn, table) {
   return await runSql(conn, `TRUNCATE TABLE IF EXISTS ${table}`);   
 }
 
-async function insertTB(conn, table, column, value) {
+async function insertRecord(conn, table, column, value) {
   return await runSql(conn, `INSERT INTO ${table} (${column}) VALUES (${value})`);
 }
 
-async function insertsTB(conn, table, column, values) {
+async function insertRecords(conn, table, column, values) {
   return await runSqlValues(conn, `INSERT INTO ${table} (${column}) VALUES ?`, values);
 }
 
@@ -144,10 +144,6 @@ async function updateRecords(conn, table, value, where = undefined) {
     sql += ` WHERE ${where}`;
   }
   return await runSql(conn, sql);
-}
-
-async function insertsTB(conn, table, column, values) {
-  return await runSql(conn, `INSERT INTO ${table} (${column}) VALUES ?`, values);
 }
 
 async function selectRecords(callback, conn, table, field, where = undefined, order = undefined, limit = undefined, offset = undefined) {
@@ -182,4 +178,4 @@ async function deleteRecords(conn, table, condition = undefined) {
   return await runSql(conn, sql);
 }
 
-module.exports = {connect, connectDB, closeConnect, runSql, showDBs, creatDB, deleteDB, useDB, showTBs, createTB, deleteTB, insertTB, insertsTB, selectRecords, deleteRecords};
+module.exports = {connect, connectDB, closeConnect, runSql, showDBs, creatDB, deleteDB, useDB, showTBs, createTB, deleteTB, insertRecord, insertRecords, selectRecords, deleteRecords};
