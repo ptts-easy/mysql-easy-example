@@ -8,7 +8,24 @@
  * @since   2022-08-11
  */
 
-const {connect, connectDB, closeConnect, runSql, showDBs, creatDB, deleteDB, useDB, showTBs, createTB, deleteTB, insertRecord, insertRecords, selectRecords, deleteRecords} = require("./mysql-mng");
+const {
+  connect, 
+  connectDB, 
+  closeConnect, 
+  runSql, 
+  showDBs, 
+  creatDB, 
+  deleteDB, 
+  useDB, 
+  showTBs, 
+  createTB, 
+  deleteTB, 
+  insertRecord, 
+  insertRecords, 
+  selectRecords, 
+  deleteRecords,
+  joinTBs
+} = require("./mysql-mng");
 require("dotenv/config");
 
 async function mysql_all_test() {
@@ -28,7 +45,7 @@ async function mysql_all_test() {
   let conn = await connect(process.env.DB_HOST, process.env.DB_PORT, process.env.DB_USER, process.env.DB_PASSWORD);
 
   await showDBs((result) => {
-    console.log("==============================");
+    console.log("=============== showDBs ===============");
     console.log(result);
   }, conn);
 
@@ -44,7 +61,7 @@ async function mysql_all_test() {
 //  conn = await connectDB(process.env.DB_HOST, process.env.DB_PORT, process.env.DB_USER, process.env.DB_PASSWORD, process.env.DB_DATABASE);
 
   await showTBs((result) => {
-    console.log("==============================");
+    console.log("================ showTBs ==============");
     console.log(result);
   }, conn);
 
@@ -77,31 +94,62 @@ async function mysql_all_test() {
 
   await insertRecords(conn, tb_name, "name, address", values);
 
+  console.log("======= 05 : show table =======");
+
   await selectRecords((result) => {
-    console.log("==============================");
+    console.log("============== Show All Records ================");
     console.log(result);
   }, conn, tb_name, "*");
 
   await selectRecords((result) => {
-    console.log("==============================");
+    console.log("=============== Filter ===============");
     console.log(result);
   }, conn, tb_name, "id, name", "name like 'B%'", "name ASC");
   
   await selectRecords((result) => {
-    console.log("==============================");
+    console.log("=============== Filter ===============");
     console.log(result);
   }, conn, tb_name, "id, name", "name like '_i%'", "name ASC");
 
   await selectRecords((result) => {
-    console.log("==============================");
+    console.log("============== Limit ================");
     console.log(result);
-  }, conn, tb_name, "*", undefined, undefined, 5, 3);
+  }, conn, tb_name, "*", undefined, undefined, 3, 5);
 
   await deleteRecords(conn, tb_name, "name='John'");
+
+  console.log("======= 06 : join table =======");
+
+  await deleteTB(conn, "users");
+  await createTB(conn, "users", "id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), favorite_product INT");
+  await insertRecords(conn, "users", "id, name, favorite_product", 
+    [
+      [1, 'John', 154],
+      [2, 'Peter', 154],
+      [3, 'Amy', 155],
+      [4, 'Hannah', 0],
+      [5, 'Michael', 0]
+    ]);
+
+  await deleteTB(conn, "products");
+  await createTB(conn, "products", "id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255)");
+  await insertRecords(conn, "products", "id, name", 
+    [
+      [154, 'Chocolate Heaven'],
+      [155, 'Tasty Lemons'],
+      [156, 'Vanilla Dreams']
+    ]);
+
+  await joinTBs((result) => {
+    console.log("============== Join Tables ================");
+    console.log(result);
+  }, conn, "users", "products", "users.name AS user, products.name AS favorite", "users.favorite_product = products.id");
 
   await closeConnect(conn);
 
   console.log("======= end all-test =======");
 }
 
-mysql_all_test();
+(async () => {
+  await mysql_all_test();
+})();

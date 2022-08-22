@@ -1,8 +1,8 @@
-var mysql = require('mysql');
+const mysql = require('mysql');
 
 async function connect(host, port, user, password) {
   
-  var conn = await mysql.createConnection({host:host, port:port, user:user, password:password});
+  let conn = await mysql.createConnection({host:host, port:port, user:user, password:password});
 
   await conn.connect(function(err) {
     if (err) {
@@ -16,7 +16,7 @@ async function connect(host, port, user, password) {
 
 async function connectDB(host, port, user, password, database) {
   
-  var conn = await mysql.createConnection({host:host, port:port, user:user, password:password, database:database});
+  let conn = await mysql.createConnection({host:host, port:port, user:user, password:password, database:database});
 
   await conn.connect(function(err) {
     if (err) {
@@ -146,7 +146,7 @@ async function updateRecords(conn, table, value, where = undefined) {
   return await runSql(conn, sql);
 }
 
-async function selectRecords(callback, conn, table, field, where = undefined, order = undefined, limit = undefined, offset = undefined) {
+async function selectRecords(callback, conn, table, field, where = undefined, order = undefined, offset = undefined, limit = undefined) {
   let sql = `SELECT ${field} FROM ${table}`;
 
   if (where != undefined) {
@@ -163,7 +163,7 @@ async function selectRecords(callback, conn, table, field, where = undefined, or
 
   if (offset != undefined) {
     sql += ` OFFSET ${offset}`;
-  }  
+  }
 
   return await runSql(conn, sql, undefined, callback);
 }
@@ -178,4 +178,43 @@ async function deleteRecords(conn, table, condition = undefined) {
   return await runSql(conn, sql);
 }
 
-module.exports = {connect, connectDB, closeConnect, runSql, showDBs, creatDB, deleteDB, useDB, showTBs, createTB, deleteTB, insertRecord, insertRecords, selectRecords, deleteRecords};
+async function joinTBs(callback, conn, mainTable, joinTable, filed = undefined, condition = undefined) {
+  let sql = undefined;
+
+  if (filed != undefined) {
+    if (condition != undefined) {
+      sql = `SELECT ${filed} FROM ${mainTable} JOIN ${joinTable} ON ${condition}`;
+    } else {
+      sql = `SELECT ${filed} FROM ${mainTable} JOIN ${joinTable}`;
+    }
+  } else {
+    if (condition != undefined) {
+      sql = `SELECT * FROM ${mainTable} JOIN ${joinTable} ON ${condition}`;
+    } else {
+      sql = `SELECT * FROM ${mainTable} JOIN ${joinTable}`;
+    }
+  }
+
+  if (sql != undefined) {
+    return await runSql(conn, sql, undefined, callback);
+  }
+}
+
+module.exports = {
+  connect, 
+  connectDB, 
+  closeConnect, 
+  runSql, 
+  showDBs, 
+  creatDB, 
+  deleteDB, 
+  useDB, 
+  showTBs, 
+  createTB, 
+  deleteTB, 
+  insertRecord, 
+  insertRecords, 
+  selectRecords, 
+  deleteRecords,
+  joinTBs
+};
